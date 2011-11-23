@@ -77,6 +77,28 @@ Zone.prototype.setLevel = function (level) {
 
   return this;
 };
+Zone.prototype.getXYListBySteps = function (radius) {
+	var list = new Array();
+
+	for(var i=0;i<radius;i++){
+		list[i] = new Array();
+	}
+		
+	list[0].push((this.x) + "_" + (this.y));
+	for(var i=0;i<radius;i++){
+          for(var j=0;j<radius;j++){
+            if(i||j){
+	      if(i>=j) list[i].push((this.x + i) + "_" + (this.y + j)); else list[j].push((this.x + i) + "_" + (this.y + j)) ;
+	      if(i>=j) list[i].push((this.x - i) + "_" + (this.y - j)); else list[j].push((this.x - i) + "_" + (this.y - j)) ;
+              if(i>0&&j>0&&(i+j<=radius-1)){
+	        list[i+j].push((this.x - i) + "_" + (this.y + j));
+	        list[i+j].push((this.x + i) + "_" + (this.y - j));
+	      }
+            }
+          }
+        }
+	return (list);
+};
 
 // public static
 var getZoneByLocation = function (lat, lon, level) {
