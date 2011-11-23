@@ -99,6 +99,30 @@ Zone.prototype.getXYListBySteps = function (radius) {
         }
 	return (list);
 };
+Zone.prototype.getCodesAround = function (around) {
+  var t = this;
+  var a = around || 1;
+  var l = t.code.length;
+  var codes = [t.code];
+
+  for (var i = 0; i <= a; ++i) {
+    for (var j = 0; j <= a; ++j) {
+      if (i === 0 && j === 0) {
+        continue;
+      }
+
+      codes.push(hexCoords2Code(t.x + i, t.y + j, l));
+      codes.push(hexCoords2Code(t.x - i, t.y - j, l));
+
+      if (i > 0 && j > 0 && (i + j <= a - 1)) {
+        codes.push(hexCoords2Code(t.x - i, t.y + j, l));
+        codes.push(hexCoords2Code(t.x + i, t.y - j, l));
+      }
+    }
+  }
+
+  return codes;
+};
 
 // public static
 var getZoneByLocation = function (lat, lon, level) {
@@ -275,6 +299,52 @@ var xy2loc = function (x, y) {
   var lat = (y / h_base) * 180;
   lat = 180 / Math.PI * (2 * Math.atan(Math.exp(lat * Math.PI / 180)) - Math.PI / 2);
   return { lon: lon, lat: lat };
+};
+
+var hexCoords2Code = function (hexX, hexY, length) {
+  var h_code ="";
+  var code3_x =new Array();
+  var code3_y =new Array();
+  var code3 ="";
+  var code9="";
+  var mod_x = hexX;
+  var mod_y = hexY;
+
+  for(i = 0;i <= length ; i++){
+    var h_pow = Math.pow(3,length-i);
+    if(mod_x >= Math.ceil(h_pow/2)){
+      code3_x[i] =2;
+      mod_x -= h_pow;
+    }else if(mod_x <= -Math.ceil(h_pow/2)){
+      code3_x[i] =0;
+      mod_x += h_pow;
+    }else{
+      code3_x[i] =1;
+    }
+    if(mod_y >= Math.ceil(h_pow/2)){
+      code3_y[i] =2;
+      mod_y -= h_pow;
+    }else if(mod_y <= -Math.ceil(h_pow/2)){
+      code3_y[i] =0;
+      mod_y += h_pow;
+    }else{
+      code3_y[i] =1;
+    }
+  }
+
+  for(i=0;i<code3_x.length;i++){
+    code3 += ("" + code3_x[i] + code3_y[i]);
+    code9 += parseInt(code3,3);
+    h_code += code9;
+    code9="";
+    code3="";
+  }
+  var h_2 = h_code.substring(3);
+  var h_1 = h_code.substring(0,3);
+  var h_a1 = Math.floor(h_1/30);
+  var h_a2 = h_1%30;
+
+  return (h_key.charAt(h_a1)+h_key.charAt(h_a2)) + h_2;
 };
 
 // EXPORT
