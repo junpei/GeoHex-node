@@ -32,9 +32,10 @@ var Zone = function (lat, lon, x, y, code) {
   this.x = x;
   this.y = y;
   this.code = code;
+  this.level = this.code.length - 2;
 };
 Zone.prototype.getLevel = function () {
-  return this.code.length-2;
+  return this.level;
 };
 Zone.prototype.getHexSize = function () {
   return calcHexSize(this.getLevel() + 2);
