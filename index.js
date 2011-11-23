@@ -64,6 +64,19 @@ Zone.prototype.getHexCoords = function () {
     {lat: h_btm, lon: h_cl}
   ];
 };
+Zone.prototype.setLevel = function (level) {
+  var t = this;
+  var z = getZoneByLocation(this.lat, this.lon, level);
+
+  t.lat = z.lat;
+  t.lon = z.lon;
+  t.x = z.x;
+  t.y = z.y;
+  t.code = z.code;
+  t.level = z.level;
+
+  return this;
+};
 
 // public static
 var getZoneByLocation = function (lat, lon, level) {
