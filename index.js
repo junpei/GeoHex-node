@@ -16,9 +16,6 @@ var h_base = 20037508.34;
 var h_deg = Math.PI*(30/180);
 var h_k = Math.tan(h_deg);
 
-// private static
-var _zoneCache = {};
-
 // *** Share with all instances ***
 // private static
 var calcHexSize = function (level) {
@@ -212,12 +209,10 @@ var getZoneByLocation = function (lat, lon, level) {
   var h_a2 = h_1%30;
   h_code = (h_key.charAt(h_a1)+h_key.charAt(h_a2)) + h_2;
 
-  if (!!_zoneCache[h_code])  return _zoneCache[h_code];
-  return (_zoneCache[h_code] = new Zone(z_loc_y, z_loc_x, h_x, h_y, h_code));
+  return new Zone(z_loc_y, z_loc_x, h_x, h_y, h_code);
 };
 
 var getZoneByCode = function (code) {
-  if (!!_zoneCache[code])  return _zoneCache[code];
   var level = code.length;
   var h_size =  calcHexSize(level);
   var unit_x = 6 * h_size;
@@ -283,7 +278,7 @@ var getZoneByCode = function (code) {
      h_x += Math.pow(3,level);    // v3.01
      h_y -= Math.pow(3,level);    // v3.01
   }
-  return (_zoneCache[code] = new Zone(h_loc.lat, h_loc.lon, h_x, h_y, code));
+  return new Zone(h_loc.lat, h_loc.lon, h_x, h_y, code);
 };
 
 // private static
