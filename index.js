@@ -96,7 +96,7 @@ Zone.prototype.getXYListBySteps = function (radius) {
         }
 	return (list);
 };
-Zone.prototype.getCodesAround = function (around) {
+Zone.prototype.getCodesAround = function (around, execute) {
   var t = this;
   var a = around || 1;
   var l = t.code.length;
@@ -108,12 +108,24 @@ Zone.prototype.getCodesAround = function (around) {
         continue;
       }
 
-      codes.push(hexCoords2Code(t.x + i, t.y + j, l));
-      codes.push(hexCoords2Code(t.x - i, t.y - j, l));
+      if (typeof execute === 'function') {
+        codes.push(execute(hexCoords2Code(t.x + i, t.y + j, l)));
+        codes.push(execute(hexCoords2Code(t.x - i, t.y - j, l)));
 
-      if (i > 0 && j > 0 && (i + j <= a - 1)) {
-        codes.push(hexCoords2Code(t.x - i, t.y + j, l));
-        codes.push(hexCoords2Code(t.x + i, t.y - j, l));
+        if (i > 0 && j > 0 && (i + j <= a - 1)) {
+          codes.push(execute(hexCoords2Code(t.x - i, t.y + j, l)));
+          codes.push(execute(hexCoords2Code(t.x + i, t.y - j, l)));
+        }
+      }
+
+      else {
+        codes.push(hexCoords2Code(t.x + i, t.y + j, l));
+        codes.push(hexCoords2Code(t.x - i, t.y - j, l));
+
+        if (i > 0 && j > 0 && (i + j <= a - 1)) {
+          codes.push(hexCoords2Code(t.x - i, t.y + j, l));
+          codes.push(hexCoords2Code(t.x + i, t.y - j, l));
+        }
       }
     }
   }
