@@ -132,6 +132,20 @@ Zone.prototype.getCodesAround = function (around, execute) {
 
   return codes;
 };
+Zone.prototype.getDistanceWithZone = function (zone) {
+  var t = this
+    , x = zone.x - t.x
+    , y = zone.y - t.y
+    , list = []
+    , xabs = Math.abs(x)
+    , yabs = Math.abs(y)
+    , xqad = xabs ? x / xabs : null
+    , yqad = yabs ? y / yabs : null
+    , m = (xqad === yqad ? (yabs > xabs ? x : y) : 0)
+    ;
+
+  return xabs + yabs - Math.abs(m) + 1;
+};
 
 // public static
 var getZoneByLocation = function (lat, lon, level) {
