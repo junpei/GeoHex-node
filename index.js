@@ -100,7 +100,7 @@ Zone.prototype.getCodesAround = function (around, execute) {
   var t = this;
   var a = around || 1;
   var l = t.code.length;
-  var codes = [t.code];
+  var codes = (typeof execute === 'function') ? [execute(t.code)] : [t.code];
 
   for (var i = 0; i <= a; ++i) {
     for (var j = 0; j <= a; ++j) {
