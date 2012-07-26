@@ -97,10 +97,16 @@ Zone.prototype.getXYListBySteps = function (radius) {
 	return (list);
 };
 Zone.prototype.getCodesAround = function (around, execute) {
-  var t = this;
-  var a = around || 1;
-  var l = t.code.length;
-  var codes = (typeof execute === 'function') ? [execute(t.code)] : [t.code];
+  var t = this
+    , a = around || 1
+    , l = t.code.length;
+    ;
+
+  if (typeof execute !== 'function') {
+    execute = function (code) { return code; };
+  }
+
+  var codes = [execute(t.code)];
 
   for (var i = 0; i <= a; ++i) {
     for (var j = 0; j <= a; ++j) {
@@ -108,24 +114,12 @@ Zone.prototype.getCodesAround = function (around, execute) {
         continue;
       }
 
-      if (typeof execute === 'function') {
-        codes.push(execute(hexCoords2Code(t.x + i, t.y + j, l)));
-        codes.push(execute(hexCoords2Code(t.x - i, t.y - j, l)));
+      codes.push(execute(hexCoords2Code(t.x + i, t.y + j, l)));
+      codes.push(execute(hexCoords2Code(t.x - i, t.y - j, l)));
 
-        if (i > 0 && j > 0 && (i + j <= a - 1)) {
-          codes.push(execute(hexCoords2Code(t.x - i, t.y + j, l)));
-          codes.push(execute(hexCoords2Code(t.x + i, t.y - j, l)));
-        }
-      }
-
-      else {
-        codes.push(hexCoords2Code(t.x + i, t.y + j, l));
-        codes.push(hexCoords2Code(t.x - i, t.y - j, l));
-
-        if (i > 0 && j > 0 && (i + j <= a - 1)) {
-          codes.push(hexCoords2Code(t.x - i, t.y + j, l));
-          codes.push(hexCoords2Code(t.x + i, t.y - j, l));
-        }
+      if (i && j && i + j <= a) {
+        codes.push(execute(hexCoords2Code(t.x - i, t.y + j, l)));
+        codes.push(execute(hexCoords2Code(t.x + i, t.y - j, l)));
       }
     }
   }
