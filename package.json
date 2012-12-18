@@ -1,0 +1,8 @@
+{
+    "name": "GeoHex-node"
+  , "version": "3.01-extension-0.1.4"
+  , "private": false
+  , "dependencies": {
+    "vows": ">= 0.6.4"
+  }
+}
